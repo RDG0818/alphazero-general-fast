@@ -11,8 +11,8 @@ use this script to play any two agents against each other, or play manually with
 any agent.
 """
 if __name__ == '__main__':
-    from alphazero.envs.connect4.Connect4Game import Game as Game, display
-    from alphazero.envs.connect4.Connect4Players import HumanConnect4Player
+    from alphazero.envs.connect4.connect4 import Game as Game, display
+    from alphazero.envs.connect4.players import HumanConnect4Player
     from alphazero.envs.connect4.train import args
 
     import random
@@ -21,6 +21,8 @@ if __name__ == '__main__':
     #args.arena_batch_size = 64
     args.temp_scaling_fn = lambda x, y, z: 0
     args.add_root_noise = args.add_root_temp = False
+    args._num_players = 2
+    g = Game()
 
     # all players
     # rp = RandomPlayer(g).play
@@ -28,15 +30,15 @@ if __name__ == '__main__':
     player2 = HumanConnect4Player()
 
     # nnet players
-    nn1 = NNet(Game, args)
-    nn1.load_checkpoint('./checkpoint/connect4_fpu', 'iteration-0035.pkl')
+    nn1 = NNet(g, args)
+    nn1.load_checkpoint('./checkpoint/connect4_fpu', 'iteration-0031.pkl')
     #nn2 = NNet(Game, args)
     #nn2.load_checkpoint('./checkpoint/connect4', 'iteration-0094.pkl')
     #player1 = nn1.process
     #player2 = nn1.process
 
     # player2 = NNPlayer(g, nn1, args=args, verbose=True).play
-    player1 = MCTSPlayer(Game, nn1, args=args, verbose=True, print_policy=True)#, draw_mcts=True, draw_depth=3)
+    player1 = MCTSPlayer(g, nn1, args=args, verbose=True, print_policy=True)#, draw_mcts=True, draw_depth=3)
     #args2 = args.copy()
     #args2.numMCTSSims = 10
     #player2 = MCTSPlayer(Game, nn1, args=args, verbose=True, draw_mcts=True, draw_depth=3)
@@ -45,7 +47,7 @@ if __name__ == '__main__':
 
     players = [player2, player1]
     #random.shuffle(players)
-    arena = Arena(players, Game, use_batched_mcts=False, args=args, display=display)
+    arena = Arena(players, g, use_batched_mcts=False, args=args, display=display)
 
     """
     wins, draws, winrates = arena.play_games(256)

@@ -98,9 +98,9 @@ class NNPlayer(BasePlayer):
 
 
 class MCTSPlayer(BasePlayer):
-    def __init__(self, nn: NNetWrapper, *args, print_policy=False,
+    def __init__(self, gs, nn: NNetWrapper, *args, print_policy=False,
                  average_value=False, draw_mcts=False, draw_depth=2, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(gs, *args, **kwargs)
         self.nn = nn
         self.temp = self.args.startTemp
         self.print_policy = print_policy
@@ -110,7 +110,7 @@ class MCTSPlayer(BasePlayer):
         self.reset()
         if self.verbose:
             self.mcts.search(
-                self.game_cls(), self.nn, self.args.numMCTSSims, self.args.add_root_noise, self.args.add_root_temp
+                self.game_cls, self.nn, self.args.numMCTSSims, self.args.add_root_noise, self.args.add_root_temp
             )
             value = self.mcts.value(self.average_value)
             self.__rel_val_split = value if value > 0.5 else 1 - value

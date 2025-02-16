@@ -107,7 +107,7 @@ class SelfPlayAgent(mp.Process):
 
         for i in range(self.batch_size):
             self._check_pause()
-            state = self._mcts(i).find_leaf(self.games[i])
+            state = self._mcts(i).find_leaf(self.games[i]) # This line is not working, debug
             if self._is_warmup:
                 self.policy_tensor[i].copy_(self._WARMUP_POLICY)
                 self.value_tensor[i].copy_(self._WARMUP_VALUE)

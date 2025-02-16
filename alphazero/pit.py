@@ -12,7 +12,7 @@ use this script to play any two agents against each other, or play manually with
 any agent.
 """
 if __name__ == '__main__':
-    from alphazero.envs.gobang.GobangGame import GobangGame as Game
+    from alphazero.envs.connect4.Connect4Game import Connect4Game as Game
     #from alphazero.envs.tafl.players import GreedyTaflPlayer
     from alphazero.envs.gobang.train import args
 
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     # rp = RandomPlayer(g).play
     # gp = OneStepLookaheadConnect4Player(g).play
     # hp = HumanTaflPlayer(g).play
-
+    g = Game
     # nnet players
     nn1 = NNet(Game, args)
     nn1.load_checkpoint('./checkpoint/hnefatafl', 'iteration-0001.pkl')

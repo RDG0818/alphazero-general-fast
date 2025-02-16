@@ -151,14 +151,14 @@ class Arena:
 
         # Reset the state of the players if needed
         [p.reset() for p in self.players]
-        self.game_state = self.game_cls()
+        self.game_state = self.game_cls
         player_to_index = _player_to_index or list(range(self.game_state.num_players()))
 
         while not self.stop_event.is_set():
             while self.pause_event.is_set():
                 time.sleep(.1)
 
-            action = self.players[player_to_index[self.game_state.player]](self.game_state)
+            action = self.players[player_to_index[self.game_state.player]](self.game_state) # This might need to observations instead of game_state
             if self.stop_event.is_set() or not isinstance(action, int):
                 break
 
