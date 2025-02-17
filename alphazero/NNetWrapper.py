@@ -87,7 +87,6 @@ class NNetWrapper(BaseWrapper):
     def __init__(self, game_cls, args):
         super().__init__(game_cls, args)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.nnet = NeuralNet(game, args).to(self.device)
         self._load_nnet(args)
         self.action_size = game_cls.action_size()
         self.optimizer = args.optimizer(self.nnet.parameters(), lr=args.lr, **args.optimizer_args)
