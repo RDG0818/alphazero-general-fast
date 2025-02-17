@@ -43,7 +43,8 @@ def _int2base(x, base, length):
 class Game(GameState):
     def __init__(self):
         board = Game._get_board()
-        self.uci = set(create_uci_labels())
+        self.uci_list = create_uci_labels()
+        self.uci = set(self.uci_list)
         super().__init__(board)
 
     @staticmethod
@@ -58,7 +59,7 @@ class Game(GameState):
         )
 
     def clone(self):
-        g = ChessGame()
+        g = type(self)()
         g._board = self._board.copy()
         g._player = self._player
         g._turns = self.turns
@@ -77,19 +78,19 @@ class Game(GameState):
         return True
 
     def valid_moves(self): 
-        legal_set = {move.uci() for move in self.board.legal_moves}
-        mask = np.array([1 if move in legal_set else 0 for move in self.uci], dtype=np.uint8)
+        legal_set = {move.uci() for move in self._board.legal_moves}
+        mask = np.array([1 if move in legal_set else 0 for move in self.uci_list], dtype=np.uint8)
         return mask
 
     @classmethod
     def num_players(self):
         return 2
 
-    def play_action(self, action) -> None:
+    def play_action(self, action: int) -> None:
         # if action not in self.uci:
         #     return # TODO: Better error handling
         # We are assuming that action is a legal move, should be handled in valid_moves
-        move = chess.Move.from_uci(action) # Could be faster to do indexing/hashing instead of strings
+        move = chess.Move.from_uci(self.uci_list[action]) # Could be faster to do indexing/hashing instead of strings
         
         # if move not in self._board.legal_moves:
         #     return # TODO: Better error handling
